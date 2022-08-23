@@ -1,0 +1,16 @@
+
+  {
+    "name": "pre-event",
+    "version": "1.0.0",
+    "scripts": {
+      "build": "npm run setup:server",
+      "setup:app": "npm run setup:server && npm run setup:client",
+      "setup:client": "cd pre-event.client && npm i",
+      "setup:server": "cd pre-event && npm i",
+      "start": "node pre-event/index.js"
+    },
+    "engines": {
+      "node": "^14.17.0"
+    }
+  }
+  
