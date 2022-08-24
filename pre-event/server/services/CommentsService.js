@@ -1,17 +1,44 @@
 import { dbContext } from '../db/DbContext'
-import { BadRequest } from '../utils/Errors'
+import { BadRequest, Forbidden } from '../utils/Errors'
 
 class CommentsService {
-  getEventComments(eventId) {
-    throw new Error("Method not implemented.")
+  
+  async getEventComments(eventId) {
+    const comments = await dbContext.Comments.findById(eventId).populate('creator', 'name picture')
+    if(!comments){
+      throw new BadRequest('no comments for this event')
+    }
+    return comments
   }
 
-  async findById(id) {
-    const value = await dbContext.Comments.findById(id)
-    if (!value) {
-      throw new BadRequest('Invalid Id')
+  async createComment(body) {
+    const comment = await dbContext.Comments.create(body)
+    await comment.populate('creator', 'name picture')
+    await comment.populate('event')
+    return comment
+  }
+  
+
+  async editComment(body, commentId, userId) {
+    if(body.creatorId.toString() != userId){
+      throw new Forbidden('you may not edit another user\'s comments')
     }
-    return value
+    let comment = await dbContext.Comments.findById(commentId)
+    comment = body
+    // @ts-ignore
+    await comment.save()
+    return comment
+  }
+  
+  async deleteComment(commentId, userId) {
+    const comment = await dbContext.Comments.findById(commentId)
+    // @ts-ignore
+    if(comment.creatorId.toString() != userId) {
+      throw new Forbidden('you may not delete other user\'s posts')
+    }
+    // @ts-ignore
+    comment.remove()
+    return 'comment was removed'
   }
 }
 
