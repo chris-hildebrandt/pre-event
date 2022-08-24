@@ -3,10 +3,9 @@ const Schema = mongoose.Schema
 
 export const EventSchema = new Schema(
   {
-    id: { type: String, required: true},
     creatorId: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
     name: { type: String, required: true, minlength: 3, maxlength: 100 },
-    description: { type: String, required: true, minlength: 3, maxlength: 300 },
+    description: { type: String, required: true, minlength: 3, maxlength: 500 },
     coverImg: { type: String, required: true, maxlength: 150},
     location: { type: String, required: true, minlength: 3, maxlength: 100},
     capacity: { type: Number, required: true, min: 1, max: 1000 },
@@ -21,6 +20,6 @@ export const EventSchema = new Schema(
 EventSchema.virtual('creator', {
   localField: 'creatorId',
   foreignField: '_id',
+  ref: 'Account',
   justOne: true,
-  ref: 'Account'
 })
