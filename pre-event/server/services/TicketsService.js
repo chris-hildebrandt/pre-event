@@ -17,17 +17,23 @@ class TicketsService{
     if(ticket.accountId.toString() != AccountSchema.userInfo.id){
       throw new Forbidden('You can not remove that')
     }
+    const eventId = ticketData.eventId.toString()
+    await eventsService.increaseCapacity(eventId)
     await ticket.remove()
     return 'You are no longer attending this event'
   }
   async createTicket(data) {
     const event = await eventsService.getEventById(data.id)
+    // @ts-ignore
     if (event.capacity <= 0){
       throw new BadRequest('this event is full')
     } 
     const ticket = await dbContext.Tickets.create(data)
     await ticket.populate('event')
     await ticket.populate('profile', 'name picture')
+    // @ts-ignore
+    const eventId = ticket.eventId.toString()
+    await eventsService.reduceCapacity(eventId)
     return ticket
   }
 

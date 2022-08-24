@@ -16,10 +16,7 @@ export class TicketsController extends BaseController {
     try {
       req.body.accountId = req.userInfo.id
       const ticket = await ticketsService.createTicket(req.body)
-      // @ts-ignore
-      const eventId = ticket.eventId.toString()
-      const capacity = await eventsService.reduceCapacity(eventId)
-      return res.send(ticket, capacity)
+      return res.send(ticket)
     } catch (error) {
       next(error)
     }
@@ -27,10 +24,8 @@ export class TicketsController extends BaseController {
 
   async deleteTicket(req, res, next) {
     try {
-      const ticket = await ticketsService.deleteTicket(req.body)
-      const eventId = ticket.eventId.toString()
-      const capacity = await eventsService.increaseCapacity(eventId)
-      return res.send(ticket, capacity)
+      const message = await ticketsService.deleteTicket(req.body)
+      return res.send(message)
     } catch (error) {
       next(error)
     }
