@@ -5,8 +5,15 @@ import { eventsService } from "./EventsService.js"
 
 class TicketsService{
   async getTicketsByEventId(eventId) {
-    throw new Error("Method not implemented.")
+    const tickets = await dbContext.Tickets.find({eventId}).populate('profile', 'name picture')
+    return tickets
   }
+
+  async getTicketsByAccountId(accountId) {
+    const tickets = await dbContext.Tickets.find({accountId}).populate('event')
+    return tickets
+  }
+
   async deleteTicket(ticketData) {
     
     const ticket = await dbContext.Tickets.findById(ticketData.id)
