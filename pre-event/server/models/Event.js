@@ -13,7 +13,7 @@ export const EventSchema = new Schema(
     startDate: { type: Date, required: true, validate: {
       validator: function (v) { return (v && v.getTime() > Date.now() + 24 * 60 * 60 * 1000)}}},
     isCanceled: { type: Boolean, required: true, default: false},
-    type: { type: String, enum: ['concert', 'convention', 'sport', 'digital'] }
+    type: { type: String, required: true, enum: ['concert', 'convention', 'sport', 'digital'] }
   },
   { timestamps: true, toJSON: { virtuals: true } }
 )
