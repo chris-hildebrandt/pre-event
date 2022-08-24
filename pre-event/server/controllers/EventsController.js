@@ -2,6 +2,8 @@ import BaseController from "../utils/BaseController.js";
 import { Auth0Provider } from "@bcwdev/auth0provider";
 import { eventsService } from "../services/EventsService.js"
 import { dbContext } from "../db/DbContext.js";
+import { ticketsService } from "../services/TicketsService.js";
+import { commentsService } from "../services/CommentsService.js";
 
 
 export class EventsController extends BaseController {
@@ -10,11 +12,21 @@ export class EventsController extends BaseController {
     super('api/events')
     this.router
       .get('', this.getAllEvents)
-      .get('/:id', this.getEventById)
-      .get('/:id/tickets', this.getTicketsByEventId)
+      .get('/:eventId', this.getEventById)
+      .get('/:eventId/tickets', this.getTicketsByEventId)
+      .get('/:eventId/comments', this.getEventComments)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createEvent)
-      // .delete('/id', this.cancelEvent)
+      .put('/:eventId')
+      .delete('/:eventId', this.deleteEvent)
+  }
+  async deleteEvent(req, res, next) {
+    try {
+      const response = await eventsService.deleteEvent(req.body.eventId)
+      return res.send(response)
+    } catch (error) {
+      next(error)
+    }
   }
 
   async getAllEvents(req, res, next) {
@@ -29,8 +41,17 @@ export class EventsController extends BaseController {
 
   async getEventById(req, res, next) {
     try {
-      const event = await eventsService.getEventById(req.params.id)
+      const event = await eventsService.getEventById(req.params.eventId)
       return res.send(event)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async getEventComments(req, res, next) {
+    try {
+      const comments = await commentsService.getEventComments(req.params.eventId)
+      return res.send(comments)
     } catch (error) {
       next(error)
     }
@@ -38,7 +59,7 @@ export class EventsController extends BaseController {
 
   async getTicketsByEventId(req, res, next) {
     try {
-      const tickets = await ticketsService.getTicketsByEventId(req.params.id)
+      const tickets = await ticketsService.getTicketsByEventId(req.params.eventId)
       return res.send(tickets)
     } catch (error) {
       next(error)
@@ -55,12 +76,13 @@ export class EventsController extends BaseController {
     }
   }
 
-  // async cancelEvent(req, res, next) {
-  //   try {
-  //     await
-  //   } catch (error) {
-  //     next(error)
-  //   }
-  // }
+  async cancelEvent(req, res, next) {
+    try {
+      const response = await eventsService.cancelEvent(req.params.eventId, req.userInfo.Id)
+      return res.send(response)
+    } catch (error) {
+      next(error)
+    }
+  }
 
 }
