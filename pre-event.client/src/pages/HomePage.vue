@@ -1,12 +1,17 @@
 <template>
-  <div class="home flex-grow-1 d-flex flex-column align-items-center justify-content-center">
-    <div class="home-card p-5 bg-white rounded elevation-3">
-      <img src="https://bcw.blob.core.windows.net/public/img/8600856373152463" alt="CodeWorks Logo" class="rounded-circle">
-      <h1 class="my-5 bg-dark text-white p-3 rounded text-center">
-        Vue 3 Starter
-      </h1>
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <div class="col-12 text-center">
+      <h3>PreEvent</h3>
+      <div class="col-10">
+        <h5>Blurb about how awesome this website is blah blah blah</h5>
+        <div class="row">
+          <EventCard />
+        </div>
+      </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>

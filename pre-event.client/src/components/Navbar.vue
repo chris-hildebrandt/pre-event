@@ -2,7 +2,7 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
     <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
       <div class="d-flex flex-column align-items-center">
-        <img alt="logo" src="../assets/img/cw-logo.png" height="45" />
+        <img class="logo" alt="logo" src="https://cdn-icons-png.flaticon.com/512/2842/2842453.png" height="45" />
       </div>
     </router-link>
     <button
@@ -20,10 +20,10 @@
       <ul class="navbar-nav me-auto">
         <li>
           <router-link
-            :to="{ name: 'About' }"
+            :to="{ name: 'Events' }"
             class="btn text-success lighten-30 selectable text-uppercase"
           >
-            About
+            Events
           </router-link>
         </li>
       </ul>
@@ -52,5 +52,13 @@ a:hover {
   border-bottom: 2px solid var(--bs-success);
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
+}
+
+.logo{
+  background-color: rgb(68, 201, 123) !important;
+  border-radius: 25%;
+  border-color: rgb(8, 51, 37);
+  border-width: 3px;
+  border-style: solid;
 }
 </style>
