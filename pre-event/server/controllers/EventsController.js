@@ -1,7 +1,6 @@
 import BaseController from "../utils/BaseController.js";
 import { Auth0Provider } from "@bcwdev/auth0provider";
 import { eventsService } from "../services/EventsService.js"
-import { dbContext } from "../db/DbContext.js";
 import { ticketsService } from "../services/TicketsService.js";
 import { commentsService } from "../services/CommentsService.js";
 
@@ -17,22 +16,12 @@ export class EventsController extends BaseController {
       .get('/:eventId/comments', this.getEventComments)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createEvent)
-      .put('/:eventId')
+      .put('/:eventId', this.cancelEvent)
       .delete('/:eventId', this.deleteEvent)
   }
-  async deleteEvent(req, res, next) {
-    try {
-      const response = await eventsService.deleteEvent(req.body.eventId)
-      return res.send(response)
-    } catch (error) {
-      next(error)
-    }
-  }
-
   async getAllEvents(req, res, next) {
     try {
       const events = await eventsService.getAllEvents()
-      console.log('getallevents', events)
       return res.send(events)
     } catch (error) {
       next(error)
@@ -48,19 +37,18 @@ export class EventsController extends BaseController {
     }
   }
 
-  async getEventComments(req, res, next) {
-    try {
-      const comments = await commentsService.getEventComments(req.params.eventId)
-      return res.send(comments)
-    } catch (error) {
-      next(error)
-    }
-  }
-
   async getTicketsByEventId(req, res, next) {
     try {
       const tickets = await ticketsService.getTicketsByEventId(req.params.eventId)
       return res.send(tickets)
+    } catch (error) {
+      next(error)
+    }
+  }
+  async getEventComments(req, res, next) {
+    try {
+      const comments = await commentsService.getEventComments(req.params.eventId)
+      return res.send(comments)
     } catch (error) {
       next(error)
     }
@@ -79,6 +67,15 @@ export class EventsController extends BaseController {
   async cancelEvent(req, res, next) {
     try {
       const response = await eventsService.cancelEvent(req.params.eventId, req.userInfo.Id)
+      return res.send(response)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async deleteEvent(req, res, next) {
+    try {
+      const response = await eventsService.deleteEvent(req.body.eventId, req.userInfo.id)
       return res.send(response)
     } catch (error) {
       next(error)
