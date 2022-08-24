@@ -1,9 +1,10 @@
 import { dbContext } from "../db/DbContext.js"
 import { AccountSchema } from "../models/Account.js"
 import { BadRequest, Forbidden } from "../utils/Errors.js"
+import { eventsService } from "./EventsService.js"
 
 class TicketsService{
-  getTicketsByEventId(eventId) {
+  async getTicketsByEventId(eventId) {
     throw new Error("Method not implemented.")
   }
   async deleteTicket(ticketData) {
@@ -12,14 +13,22 @@ class TicketsService{
     if(!ticket){
       throw new BadRequest('Ticket does not exist!')
     }
+    // @ts-ignore
     if(ticket.accountId.toString() != AccountSchema.userInfo.id){
       throw new Forbidden('You can not remove that')
     }
     await ticket.remove()
-    return 'collab ended'
+    return 'You are no longer attending this event'
   }
-  createTicket(body) {
-    throw new Error("Method not implemented.");
+  async createTicket(data) {
+    const event = await eventsService.getEventById(data.id)
+    if (event.capacity <= 0){
+      throw new BadRequest('this event is full')
+    } 
+    const ticket = await dbContext.Tickets.create(data)
+    await ticket.populate('event')
+    await ticket.populate('profile', 'name picture')
+    return ticket
   }
 
 }

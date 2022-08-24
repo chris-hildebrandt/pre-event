@@ -14,10 +14,10 @@ export class TicketsController extends BaseController {
 
   async createTicket(req, res, next) {
     try {
-      // NOTE NEVER TRUST THE CLIENT TO ADD THE CREATOR ID
       req.body.accountId = req.userInfo.id
       const ticket = await ticketsService.createTicket(req.body)
-      const eventId = res.body.eventId
+      // @ts-ignore
+      const eventId = ticket.eventId.toString()
       const capacity = await eventsService.reduceCapacity(eventId)
       return res.send(ticket, capacity)
     } catch (error) {
@@ -27,9 +27,8 @@ export class TicketsController extends BaseController {
 
   async deleteTicket(req, res, next) {
     try {
-      req.body.accountId = req.userInfo.id
       const ticket = await ticketsService.deleteTicket(req.body)
-      const eventId = res.body.eventId
+      const eventId = ticket.eventId.toString()
       const capacity = await eventsService.increaseCapacity(eventId)
       return res.send(ticket, capacity)
     } catch (error) {

@@ -8,13 +8,17 @@ class EventsService{
   }
   async increaseCapacity(eventId) {
     const event = await this.getEventById(eventId)
-    const capacity = event.capacity -= 1
+    const capacity = event.capacity += 1
     await event.save()
     return capacity
   }
-  reduceCapacity(eventId) {
-    throw new Error("Method not implemented.")
+
+  async reduceCapacity(eventId) {
+    const event = await dbContext.Events.findById(eventId)
+    // @ts-ignore
+    event.capacity -= 1
   }
+
   async getEventById(eventId) {
     const event = await dbContext.Events.findById(eventId).populate('creator', 'name picture')
     if(!event){
@@ -22,8 +26,8 @@ class EventsService{
     }
     return event
   }
+  
   async createEvent(eventData) {
-    // get event check capacity, create ticket edit , 
     const event = await dbContext.Events.create(eventData)
     await event.populate('creator', 'name picture')
     console.log('new event', event);
@@ -37,7 +41,8 @@ class EventsService{
   }
 
   async cancelEvent(eventId, userId){
-    const event = this.getEventById(eventId)
+    const event = await this.getEventById(eventId)
+    // @ts-ignore
     if(event.creatorId.toString() != userId){
       throw new Forbidden('you are not authorized to edit this event')
     }

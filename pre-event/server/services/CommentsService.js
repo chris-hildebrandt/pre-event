@@ -5,10 +5,6 @@ class CommentsService {
   getEventComments(eventId) {
     throw new Error("Method not implemented.")
   }
-  async find(query = {}) {
-    const Comments = await dbContext.Comments.find(query)
-    return Comments
-  }
 
   async findById(id) {
     const value = await dbContext.Comments.findById(id)
