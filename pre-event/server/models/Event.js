@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
-export const TowerEventSchema = new Schema(
+export const EventSchema = new Schema(
   {
     id: { type: String, required: true},
     creatorId: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
@@ -18,7 +18,7 @@ export const TowerEventSchema = new Schema(
   { timestamps: true, toJSON: { virtuals: true } }
 )
 
-TowerEventSchema.virtual('creator', {
+EventSchema.virtual('creator', {
   localField: 'creatorId',
   foreignField: '_id',
   justOne: true,
