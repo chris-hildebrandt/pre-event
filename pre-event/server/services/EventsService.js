@@ -10,9 +10,11 @@ class EventsService{
     return event
   }
 
-  getAllEvents() {
-    throw new Error("Method not implemented.")
+  // TODO I would like to have a filter for canceled and full events
+  async getAllEvents() {
+    const events = await dbContext.Events.find().sort({startDate: -1}).populate('creator', 'name picture')
+    return events
   }
-  async 
+
 }
 export const eventsService = new EventsService()
