@@ -6,7 +6,8 @@
       <div class="col-10">
         <h5>Blurb about how awesome this website is blah blah blah</h5>
         <div class="row">
-          <EventCard />
+          <button class="btn" @click="getEvents">get events</button>
+          <!-- <EventCard /> -->
         </div>
       </div>
     </div>
@@ -34,7 +35,7 @@ export default {
       }
     }
     onMounted(()=> {
-
+      getEvents()
     })
 
     return {}
