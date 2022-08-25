@@ -52,8 +52,12 @@ class EventsService {
     return `${event.title} event has been canceled`
   }
 
-  async editEvent(eventId, data) {
+  async editEvent(eventId, userId, data) {
     let event = await this.getEventById(eventId)
+    // @ts-ignore
+    if (event.creatorId.toString() != userId) {
+      throw new Forbidden('you are not authorized to edit this event')
+    }
     if (event.isCanceled) {
       throw new BadRequest('this event has been canceled')
     }

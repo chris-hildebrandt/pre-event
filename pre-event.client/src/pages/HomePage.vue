@@ -1,31 +1,40 @@
 <template>
   <div class="container-fluid">
-    <div class="row justify-content-center">
-      <div class="col-12 text-center">
-        <h3>PreEvent</h3>
-        <div class="col-10">
-          <h5>Blurb about how awesome this website is blah blah blah</h5>
-<button class="btn btn-primary" @click="cancel('63064c9731869825ee6da0de')">cancel</button>
-          <div class="col-3" v-for="e in events" :key="e.id">
-            <EventCard :towerEvent="e" />
+      <div class="col-12 text-center text-light bg-gray">
+        <div class="row bg-gray text-light">
+          <h5 v-if="filterTerm == ''">pre-view... pre-pay... pre-pare... Pre-EVENT</h5>
+          <h5 v-if="filterTerm == 'concert'">maybe we should have gone with "congregate" or "eventneve" or 'STEVENT'...</h5>
+          <h5 v-if="filterTerm == 'convention'">Life is better together! pick an event and socialize!</h5>
+          <h5 v-if="filterTerm == 'sport'">absolutely legitimate! no hidden fees! zero sales tax! absolutely free tickets! totally legal!</h5>
+          <h5 v-if="filterTerm == 'digital'">Fight the power, leave the Tower!</h5>
+          <div class="col-12 text-light bg-gray">Filter <i class="mdi mdi-filter mdi-24px"></i>
           </div>
+          <div class="col-2 px-0 mt-3 tab rounded-top btn btn-success" @click="filterTerm = ''">All</div>
+          <div class="col-2 px-0 mt-3 tab rounded-top btn btn-success" @click="filterTerm = 'concert'">Concerts</div>
+          <div class="col-2 px-0 mt-3 tab rounded-top btn btn-success" @click="filterTerm = 'convention'">Conventions</div>
+          <div class="col-2 px-0 mt-3 tab rounded-top btn btn-success" @click="filterTerm = 'sport'">Sports</div>
+          <div class="col-2 px-0 mt-3 tab rounded-top btn btn-success" @click="filterTerm = 'digital'">Digital</div>
+          <div class="col-2 px-0 mt-3 tab rounded-top btn btn-success" @click="getCancelledEvents">Cancelled</div>
+            <EventCard v-for="e in events" :key="e.id" :event="e" />
         </div>
       </div>
-    </div>
   </div>
 </template>
 
 <script>
 import { eventsService } from "../services/EventsService.js"
-import { computed, onMounted } from "vue";
 import { logger } from "../utils/Logger.js";
-import Pop from "../utils/Pop.js";
+import { computed, onMounted, ref } from "vue";
 import { AppState } from "../AppState.js";
-import { api } from "../services/AxiosService.js";
+import Pop from "../utils/Pop.js";
 
 export default {
   name: "Home",
+
   setup() {
+
+    const filterTerm = ref('')
+
     async function getEvents() {
       try {
         await eventsService.getEvents();
@@ -35,16 +44,14 @@ export default {
         Pop.error(error);
       }
     }
+
     onMounted(() => {
-      console.log('WHAT!!')
       getEvents();
     });
     return {
-      async cancel(eventId){
-        const res = api.delete('api/events/'+eventId)
-        console.log(res.data);
-      },
-      events: computed(() => AppState.events)
+      filterTerm,
+      events: computed(()=> AppState.events.filter(e=> filterTerm.value ? e.type == filterTerm.value : true )),
+
     };
   }
 }
@@ -52,6 +59,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.tab{
+  border-radius: 0%;
+  border: 1px solid black
+}
+
+.bg-gray{
+  background-color: #343a40;
+}
 .home {
   display: grid;
   height: 80vh;

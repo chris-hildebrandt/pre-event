@@ -14,17 +14,18 @@ class TicketsService{
     return tickets
   }
 
-  async deleteTicket(ticketData) {
+  async deleteTicket(ticketId, userId) {
     
-    const ticket = await dbContext.Tickets.findById(ticketData.id)
+    const ticket = await dbContext.Tickets.findById(ticketId)
     if(!ticket){
       throw new BadRequest('Ticket does not exist!')
     }
     // @ts-ignore
-    if(ticket.accountId.toString() != AccountSchema.userInfo.id){
+    if(ticket.accountId.toString() != userId){
       throw new Forbidden('You can not remove that')
     }
-    const eventId = ticketData.eventId.toString()
+    // @ts-ignore
+    const eventId = ticket.eventId.toString()
     await eventsService.increaseCapacity(eventId)
     await ticket.remove()
     return 'You are no longer attending this event'
