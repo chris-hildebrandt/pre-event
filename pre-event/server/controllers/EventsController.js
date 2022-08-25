@@ -16,8 +16,8 @@ export class EventsController extends BaseController {
       .get('/:eventId/comments', this.getEventComments)
       .use(Auth0Provider.getAuthorizedUserInfo)
       .post('', this.createEvent)
-      .put('/:eventId', this.cancelEvent)
-      .delete('/:eventId', this.deleteEvent)
+      .put('/:eventId', this.editEvent)
+      .delete('/:eventId', this.cancelEvent)
   }
   async getAllEvents(req, res, next) {
     try {
@@ -64,22 +64,30 @@ export class EventsController extends BaseController {
     }
   }
 
+  async editEvent(req, res, next) {
+    try { 
+      let event = await eventsService.editEvent(req.params.eventId, req.body)
+    return res.send(event)
+  } catch (error) {
+    next(error)
+  }
+  }
   async cancelEvent(req, res, next) {
     try {
-      const response = await eventsService.cancelEvent(req.params.eventId, req.body, req.userInfo.Id)
+      const response = await eventsService.cancelEvent(req.params.eventId, req.userInfo.Id)
       return res.send(response)
     } catch (error) {
       next(error)
     }
   }
 
-  async deleteEvent(req, res, next) {
-    try {
-      const response = await eventsService.deleteEvent(req.body.eventId, req.userInfo.id)
-      return res.send(response)
-    } catch (error) {
-      next(error)
-    }
-  }
+  // async deleteEvent(req, res, next) {
+  //   try {
+  //     const response = await eventsService.deleteEvent(req.body.eventId, req.userInfo.id)
+  //     return res.send(response)
+  //   } catch (error) {
+  //     next(error)
+  //   }
+  // }
 
 }

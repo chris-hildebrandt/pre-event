@@ -9,8 +9,8 @@ export const EventSchema = new Schema(
     coverImg: { type: String, required: true, maxlength: 150},
     location: { type: String, required: true, minlength: 3, maxlength: 100},
     capacity: { type: Number, required: true, min: 1, max: 1000 },
-    startDate: { type: Date, required: true, validate: {
-      validator: function (v) { return (v && v.getTime() > Date.now() + 24 * 60 * 60 * 1000)}}},
+    startDate: { type: Date, required: true, },
+      // validate: { validator: function (v) { return (v && v.getTime() > Date.now() + 24 * 60 * 60 * 1000)}}
     isCanceled: { type: Boolean, required: true, default: false},
     type: { type: String, required: true, enum: ['concert', 'convention', 'sport', 'digital'] }
   },

@@ -1,10 +1,10 @@
-import { logger } from "../utils/Logger.js"
+import { AppState } from "../AppState.js"
 import { api } from "./AxiosService.js"
 
 class EventsService{
   async getEvents(){
     const res = await api.get('api/events')
-    logger.log('heres the events', res.data)
+    console.log(res);
   }
 }
 export const eventsService = new EventsService()
