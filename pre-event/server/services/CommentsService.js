@@ -3,8 +3,9 @@ import { BadRequest, Forbidden } from '../utils/Errors'
 
 class CommentsService {
   
-  async getEventComments(eventId) {
-    const comments = await dbContext.Comments.findById(eventId).populate('creator', 'name picture')
+  async getEventComments(query = {}) {
+    const comments = await dbContext.Comments.find(query).populate('creator', 'name picture')
+    // TODO remove this if it throws error on blank page.
     if(!comments){
       throw new BadRequest('no comments for this event')
     }

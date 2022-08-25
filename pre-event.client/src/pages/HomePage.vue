@@ -15,9 +15,33 @@
 </template>
 
 <script>
+import { eventsService } from "../services/EventsService.js"
+import { onMounted } from "vue";
+import { logger } from "../utils/Logger.js";
+import Pop from "../utils/Pop.js";
+
 export default {
-  name: 'Home'
+  name: 'Home',
+
+  Setup(){
+
+    async function getEvents(){
+      try {
+      await eventsService.getEvents()
+      } catch (error) {
+      logger.error('[getting events]', error);
+      Pop.error(error);
+      }
+    }
+    onMounted(()=> {
+
+    })
+
+    return {}
+
+  }
 }
+
 </script>
 
 <style scoped lang="scss">

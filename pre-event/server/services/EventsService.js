@@ -39,13 +39,14 @@ class EventsService {
     return events
   }
 
-  async cancelEvent(eventId, userId) {
+  async cancelEvent(eventId, eventData, userId) {
     const event = await this.getEventById(eventId)
     // @ts-ignore
     if (event.creatorId.toString() != userId) {
       throw new Forbidden('you are not authorized to edit this event')
     }
-    event.isCanceled = !(await event).isCanceled
+    // event = eventData
+    event.isCanceled = !event.isCanceled
     await event.save()
     // @ts-ignore
     return `${event.title} event has been canceled`
