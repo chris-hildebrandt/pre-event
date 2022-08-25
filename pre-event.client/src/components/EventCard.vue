@@ -1,7 +1,7 @@
 <template>
   <div class="col-3 card btn selectable selectable-none elevation-3">
     <div class="p-2">
-      <img class="img-fluid" :src="event.coverImg" alt="event image">
+      <img class="img-fluid" :src="towerEvent.coverImg" alt="event image">
     </div>
   </div>
 </template>
@@ -10,7 +10,7 @@
 import { Event } from "../models/Event.js";
 
 export default {
-  props: { event: { type: Event, required: true}},
+  props: { towerEvent: { type: Event, required: true } },
 
   setup() {
     return {}

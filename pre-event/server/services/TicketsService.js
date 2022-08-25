@@ -30,7 +30,7 @@ class TicketsService{
     return 'You are no longer attending this event'
   }
   async createTicket(data) {
-    const event = await eventsService.getEventById(data.id)
+    const event = await eventsService.getEventById(data.eventId)
     // @ts-ignore
     if (event.capacity <= 0){
       throw new BadRequest('this event is full')

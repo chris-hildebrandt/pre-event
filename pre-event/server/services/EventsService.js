@@ -7,15 +7,16 @@ class EventsService {
   async increaseCapacity(eventId) {
     const event = await this.getEventById(eventId)
     // @ts-ignore
-    const capacity = event.capacity += 1
+    event.capacity += 1
     await event.save()
-    return capacity
   }
 
   async reduceCapacity(eventId) {
     const event = await dbContext.Events.findById(eventId)
     // @ts-ignore
     event.capacity -= 1
+    // @ts-ignore
+    await event.save()
   }
 
   async getEventById(eventId) {
