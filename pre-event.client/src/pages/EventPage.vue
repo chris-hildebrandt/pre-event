@@ -1,6 +1,6 @@
 <template>
   <section v-if="event">
-    <div class="container-fluid event-img">
+    <div class="container event-img">
       <div class="row">
         <div class="col-8 offset-1">
           <p>
@@ -54,20 +54,27 @@
           </div>
         </div>
       </div>
-      <div class="card col-12">
-        <form class="form-control" @submit.prevent="handleSubmit">
+      <div class="col-12 m-2">
+        <form class="card p-3" @submit.prevent="handleSubmit">
           <div><img class="profile-img" :src="account.picture" alt="profile-img" :title="account.name">
           </div>
           <label for="" class="form-label">Comment Below:</label>
-          <input type="text" required v-model="editable.body" name="comment" rows="6">
+          <textarea type="text" required v-model="editable.body" name="comment" rows="6"></textarea>
+          <button type="submit" class="btn btn-primary rounded-pill">post</button>
         </form>
       </div>
       <div v-for="c in comments" :key="c.id">
-        <div class="col-2"><img class="profile-img" :src="c.creator?.picture" :title="c.creator?.name" alt="profile-picture">
-          <p>{{ c.creator?.name }}</p>
-        </div>
-        <div class="col-8">
-          <p>{{ c.body }}</p>
+        <div class="row">
+          <div class="card p-2 elevation-2">
+            <div class="col-2 d-flex align-items-center"><img class="profile-img-lg" :src="c.creator?.picture" :title="c.creator?.name"
+                alt="profile-picture">
+              <p class="px-4 mt-3">{{ c.creator?.name }}</p>
+            </div>
+            <div class="col-8 p-3">
+              <p>{{ c.body }}</p>
+            </div>
+            <button v-if="c.creatorId == account.id" class="btn btn-danger" @click="deleteComment(c.id)">delete comment</button>
+          </div>
         </div>
       </div>
     </div>
@@ -79,14 +86,14 @@
 </template>
 
 <script>
-import { computed } from "@vue/reactivity";
-import { onMounted } from "vue";
-import { useRoute } from "vue-router";
-import { AppState } from "../AppState.js";
-import { eventsService } from "../services/EventsService.js";
 import { ticketsService } from "../services/TicketsService.js";
+import { eventsService } from "../services/EventsService.js";
 import EventForm from "../components/EventForm.vue"
 import { logger } from "../utils/Logger.js";
+import { computed } from "@vue/reactivity";
+import { AppState } from "../AppState.js";
+import { useRoute } from "vue-router";
+import { onMounted, ref } from "vue";
 import Pop from "../utils/Pop.js";
 
 export default {
@@ -178,7 +185,29 @@ export default {
           logger.error('[remove ticket]', error);
           Pop.error(error);
         }
-      }
+      },
+
+      async handleSubmit() {
+        try {
+          editable.value.eventId = route.params.eventId
+          editable.value.creatorId = this.account.id
+          await eventsService.createComment(editable.value)
+          editable.value = {}
+        } catch (error) {
+          logger.error('[]', error);
+          Pop.error(error);
+        }
+      },
+
+      async deleteComment(commentId) {
+        try {
+        await eventsService.deleteComment(commentId)
+        getComments()
+        } catch (error) {
+        logger.error('[deleting comment]', error);
+        Pop.error(error);
+        }
+      },
 
     }
 
@@ -191,7 +220,7 @@ export default {
   background-position: center;
   background-size: cover;
   background-image: v-bind(cover);
-  height: 50vh;
+  height: 60vh;
 }
 
 p {
@@ -201,6 +230,12 @@ p {
 .profile-img {
   height: 24px;
   width: 24px;
+  border-radius: 50%;
+}
+
+.profile-img-lg {
+  height: 48px;
+  width: 48px;
   border-radius: 50%;
 }
 </style>

@@ -49,6 +49,7 @@
 </template>
 
 <script>
+import { Modal } from "bootstrap";
 import { ref } from "vue";
 import { router } from "../router.js";
 import { eventsService } from "../services/EventsService.js";
@@ -63,8 +64,8 @@ export default {
         try {
           const eventData = await eventsService.createEvent(editable.value)
           Pop.success('Event Created Successfully!')
-          
-          router.push('/event/'+eventData.eventId)
+          router.push('/events/'+eventData.id)
+          Modal.getOrCreateInstance(document.getElementById('create-event')).hide()
         }
         catch (error) {
           Pop.error(error)

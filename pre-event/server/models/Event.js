@@ -6,7 +6,7 @@ export const EventSchema = new Schema(
     creatorId: { type: Schema.Types.ObjectId, ref: 'Account', required: true },
     name: { type: String, required: true, minlength: 3, maxlength: 100 },
     description: { type: String, required: true, minlength: 3, maxlength: 1000 },
-    coverImg: { type: String, required: true, maxlength: 150},
+    coverImg: { type: String, required: true, maxlength: 500},
     location: { type: String, required: true, minlength: 3, maxlength: 100},
     capacity: { type: Number, required: true, min: 0, max: 1000 },
     startDate: { type: Date, required: true, },

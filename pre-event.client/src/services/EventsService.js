@@ -37,6 +37,15 @@ class EventsService{
     logger.log(res.data)
   }
 
+  async createComment(commentData){
+    const res = await api.post('api/comments', commentData)
+    AppState.comments.push(res.data)
+  }
+
+  async deleteComment(commentId){
+    await api.delete('api/comments/'+commentId)
+  }
+
   async createEvent(eventData){
     const res = await api.post('api/events', eventData)
     return new Event(res.data)

@@ -37,7 +37,7 @@ class TicketsService{
       throw new BadRequest('this event is full')
     } 
     const ticket = await dbContext.Tickets.create(data)
-    await ticket.populate('event')
+    await ticket.populate('event', 'name coverImg startDate')
     await ticket.populate('profile', 'name picture')
     // @ts-ignore
     const eventId = ticket.eventId.toString()
