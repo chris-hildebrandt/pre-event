@@ -12,7 +12,7 @@ class TicketsService{
 
   async removeTicket(ticket){
     logger.log('ticketId', ticket.id)
-    const res = await api.delete('api/tickets/'+ticket.id)
+    await api.delete('api/tickets/'+ticket.id)
     AppState.tickets = AppState.tickets.filter(t=>t.id != ticket.id)
     // routerpush from ticket on accountdetails to event page
   }

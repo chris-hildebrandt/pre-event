@@ -1,5 +1,5 @@
 <template>
-  <section v-if="activeEvent">
+  <section v-if="event">
     <div class="container-fluid event-img">
       <div class="row">
         <div class="col-8 offset-1">
@@ -46,19 +46,32 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="card col-12">
-        <div v-for="t in tickets" :key="t.id"><img class="profile-img" :title="t.profile.name" :src="t.profile.picture"
-            alt="profile-picture">
-        </div>
-      </div>
-      <div class="card col-12">
-        <div v-for="c in comments" :key="c.id">
-          <div><img class="profile-img" :src="c.profile.picture" alt="profile-picture">
+    <div class="container">
+      <div class="row bg-dark">
+        <div class="col-12 d-flex p-2">
+          <div v-for="t in tickets" :key="t.id"><img class="profile-img m-1" :title="t.profile?.name"
+              :src="t.profile?.picture" alt="profile-img">
           </div>
         </div>
       </div>
+      <div class="card col-12">
+        <form class="form-control" @submit.prevent="handleSubmit">
+          <div><img class="profile-img" :src="account.picture" alt="profile-img" :title="account.name">
+          </div>
+          <label for="" class="form-label">Comment Below:</label>
+          <input type="text" required v-model="editable.body" name="comment" rows="6">
+        </form>
+      </div>
+      <div v-for="c in comments" :key="c.id">
+        <div class="col-2"><img class="profile-img" :src="c.creator?.picture" :title="c.creator?.name" alt="profile-picture">
+          <p>{{ c.creator?.name }}</p>
+        </div>
+        <div class="col-8">
+          <p>{{ c.body }}</p>
+        </div>
+      </div>
     </div>
+
 
     <EventForm />
   </section>
@@ -84,13 +97,14 @@ export default {
   setup() {
 
     const route = useRoute()
+    const editable = ref({})
 
-    async function getEventById(){
+    async function getEventById() {
       try {
-      await eventsService.getEventById(route.params.eventId)
+        await eventsService.getEventById(route.params.eventId)
       } catch (error) {
-      logger.error('[getting event by id]', error);
-      Pop.error(error);
+        logger.error('[getting event by id]', error);
+        Pop.error(error);
       }
     }
 
@@ -119,15 +133,18 @@ export default {
     })
 
     return {
+      editable,
       hasTicket: computed(() => {
         if (AppState.tickets.find(t => t.accountId == AppState.account?.id)) {
           return true
         }
         return false
       }),
-      activeEvent: computed(() => AppState.activeEvent),
+      event: computed(() => AppState.activeEvent),
       cover: computed(() => `url(${AppState.activeEvent?.coverImg || 'https://i.pinimg.com/originals/b5/94/6e/b5946e195cdff505e697a8dad43ae5fe.jpg'})`),
-      event: computed(() => AppState.events.find(e => e.id == route.params.eventId)),
+      // event: computed(() => AppState.events.find(e => e.id == route.params.eventId)),
+      tickets: computed(() => AppState.tickets),
+      comments: computed(() => AppState.comments),
       account: computed(() => AppState.account),
       async cancelEvent(eventId) {
         try {
@@ -146,6 +163,7 @@ export default {
             accountId: AppState.account.id
           }
           await ticketsService.createTicket(newTicket)
+          this.event.capacity--
         } catch (error) {
           logger.error('[making ticket]', error);
           Pop.error(error);
@@ -155,6 +173,7 @@ export default {
         try {
           let ticket = AppState.tickets.find(t => t.accountId == AppState.account.id)
           await ticketsService.removeTicket(ticket)
+          this.event.capacity++
         } catch (error) {
           logger.error('[remove ticket]', error);
           Pop.error(error);

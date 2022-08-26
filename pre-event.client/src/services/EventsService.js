@@ -24,15 +24,15 @@ class EventsService{
   }
 
   async getTickets(eventId){
-    AppState.tickets = []
     const res = await api.get(`api/events/${eventId}/tickets`)
+    logger.log('getting tickets', res.data)
     AppState.tickets = res.data
     logger.log(res.data)
   }
 
   async getComments(eventId){
-    AppState.comments = []
     const res = await api.get(`api/events/${eventId}/comments`)
+    logger.log('getting comments', res.data)
     AppState.comments = res.data
     logger.log(res.data)
   }
