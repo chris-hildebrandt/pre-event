@@ -22,7 +22,6 @@ export default {
     return {
       events: computed(()=> AppState.events),
       async navigateToEvent(eventId){
-        await eventsService.getEventById(eventId)
         router.push('/events/'+ eventId)
       }
     }

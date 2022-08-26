@@ -38,7 +38,7 @@ export default {
       try {
       await eventsService.getEventsByAccountId(accountId)
       } catch (error) {
-      logger.error('[]', error);
+      logger.error('[getting event by account id]', error);
       Pop.error(error);
       }
     }

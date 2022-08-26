@@ -11,8 +11,11 @@ class EventsService{
   }
 
   async getEventById(eventId) {
+    logger.log(eventId)
     const res = await api.get('api/events/'+eventId)
     AppState.activeEvent = res.data
+    logger.log(AppState.activeEvent)
+    return res.data.id
   }
 
   async getEventsByAccountId(accountId){
