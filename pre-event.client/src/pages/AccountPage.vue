@@ -15,8 +15,9 @@
       </div>
       <div class="col-6 text-center">
         <h3>My Tickets</h3>
-        <div class="row"></div>
+        <div class="row">
         <TicketCard v-for="t in tickets" :key="t.id" :ticket="t" />
+        </div>
       </div>
     </div>
   </div>
@@ -41,7 +42,7 @@ export default {
 
     async function getEventsByAccountId() {
       try {
-        await eventsService.getEventsByAccountId(route.userInfo.id);
+        await eventsService.getEventsByAccountId(AppState.account.id);
       }
       catch (error) {
         logger.error("[getting event by account id]", error);

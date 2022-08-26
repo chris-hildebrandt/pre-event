@@ -11,10 +11,8 @@ class EventsService{
   }
 
   async getEventById(eventId) {
-    logger.log(eventId)
     const res = await api.get('api/events/'+eventId)
     AppState.activeEvent = res.data
-    logger.log(AppState.activeEvent)
     return res.data.id
   }
 
@@ -25,16 +23,12 @@ class EventsService{
 
   async getTickets(eventId){
     const res = await api.get(`api/events/${eventId}/tickets`)
-    logger.log('getting tickets', res.data)
     AppState.tickets = res.data
-    logger.log(res.data)
   }
 
   async getComments(eventId){
     const res = await api.get(`api/events/${eventId}/comments`)
-    logger.log('getting comments', res.data)
     AppState.comments = res.data
-    logger.log(res.data)
   }
 
   async createComment(commentData){
