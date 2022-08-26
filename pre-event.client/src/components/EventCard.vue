@@ -12,14 +12,17 @@ import { computed } from "@vue/reactivity";
 import { AppState } from "../AppState.js";
 import { Event } from "../models/Event.js";
 import { router } from "../router.js";
+import { eventsService } from "../services/EventsService.js";
 
 export default {
   props: { event: { type: Event, required: true } },
 
   setup() {
+    
     return {
       events: computed(()=> AppState.events),
-      navigateToEvent(eventId){
+      async navigateToEvent(eventId){
+        await eventsService.getEventById(eventId)
         router.push('/events/'+ eventId)
       }
     }

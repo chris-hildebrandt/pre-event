@@ -38,6 +38,7 @@ export default {
     async function getEvents() {
       try {
         await eventsService.getEvents();
+        AppState.events = AppState.events.filter(e => e.isCanceled == false)
       }
       catch (error) {
         logger.error("[getting events]", error);
