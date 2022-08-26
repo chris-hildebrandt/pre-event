@@ -12,13 +12,26 @@ class EventsService{
 
   async getEventById(eventId) {
     const res = await api.get('api/events/'+eventId)
-    logger.log('get event by id', res.data)
     AppState.activeEvent = res.data
   }
 
   async getEventsByAccountId(accountId){
     await this.getEvents()
     AppState.events = AppState.events.filter(e => e.creatorId == accountId)
+  }
+
+  async getTickets(eventId){
+    AppState.tickets = []
+    const res = await api.get(`api/events/${eventId}/tickets`)
+    AppState.tickets = res.data
+    logger.log(res.data)
+  }
+
+  async getComments(eventId){
+    AppState.comments = []
+    const res = await api.get(`api/events/${eventId}/comments`)
+    AppState.comments = res.data
+    logger.log(res.data)
   }
 
   async createEvent(eventData){
