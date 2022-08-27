@@ -24,7 +24,7 @@
           </div>
           <div class="d-flex justify-content-evenly align-items-center">
             <div class="m-3 col-3">
-              <input v-model="editable.startDate" required type="date" class="" id="date">
+              <input v-model="editable.startDate" required type="date" class="" id="date" :min="(new Date().toISOString().slice(0,10))">
             </div>
             <div class="form-group m-3 col-3">
               <select v-model="editable.type" name="" id="" class="custom-select">

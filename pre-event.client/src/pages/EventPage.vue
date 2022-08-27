@@ -201,6 +201,8 @@ export default {
 
       async deleteComment(commentId) {
         try {
+           const yes = await Pop.confirm('Are you sure you want to delete this event? This action cannot be undone!')
+          if (!yes) { return }
         await eventsService.deleteComment(commentId)
         getComments()
         } catch (error) {
