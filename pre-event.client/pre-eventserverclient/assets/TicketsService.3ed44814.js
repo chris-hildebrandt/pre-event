@@ -1,0 +1,1 @@
+import{j as s,A as e,l as i}from"./index.70f62ba1.js";class c{async createTicket(t){const a=await s.post("api/tickets",t);e.tickets.push(a.data)}async removeTicket(t){await s.delete("api/tickets/"+t.id),e.tickets=e.tickets.filter(a=>a.id!=t.id)}async getTickets(){const t=await s.get("account/tickets");i.log(t.data),e.tickets=t.data}}const r=new c;export{r as t};
