@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [vue()],
   build: {
-    outDir: 'pre-event\server\client',
+    outDir: '../pre-event/client',
     sourcemap: false
   },
   server: {
