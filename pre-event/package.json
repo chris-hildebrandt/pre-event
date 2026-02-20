@@ -17,7 +17,7 @@
     "cors": "2.8.5",
     "dotenv": "16.0.1",
     "esm": "3.2.25",
-    "express": "4.21.2",
+    "express": "4.22.1",
     "helmet": "5.1.1",
     "mongoose": "6.13.6",
     "socket.io": "4.8.1"
